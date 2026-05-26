@@ -1,0 +1,1588 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Workflow — Отдел Qlik Sense</title>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --red: #C8102E;
+  --red-dark: #9B0B22;
+  --red-light: #FDEDF0;
+  --red-mid: #F5C0CB;
+  --gold: #E8A020;
+  --gold-light: #FEF3E0;
+  --green: #1A7A4A;
+  --green-light: #E6F5EC;
+  --blue: #1B4F8A;
+  --blue-light: #E8F0FA;
+  --purple: #5B3D9E;
+  --purple-light: #F0EBFB;
+  --gray-50: #F9F8F7;
+  --gray-100: #F0EFED;
+  --gray-200: #E0DEDD;
+  --gray-400: #9E9C9A;
+  --gray-600: #5A5856;
+  --gray-900: #1A1918;
+  --bg: #FAFAF9;
+  --surface: #FFFFFF;
+  --text: #1A1918;
+  --text-muted: #6B6967;
+  --border: rgba(0,0,0,0.08);
+  --border-strong: rgba(0,0,0,0.14);
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+  --shadow-md: 0 4px 12px rgba(0,0,0,0.08), 0 2px 4px rgba(0,0,0,0.04);
+  --shadow-lg: 0 12px 32px rgba(0,0,0,0.10), 0 4px 8px rgba(0,0,0,0.06);
+  --radius: 12px;
+  --radius-sm: 8px;
+  --radius-lg: 16px;
+  --font: 'Manrope', sans-serif;
+  --mono: 'JetBrains Mono', monospace;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--font);
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+  font-size: 15px;
+  min-height: 100vh;
+}
+
+/* ── NAV ── */
+nav {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(255,255,255,0.92);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+  padding: 0 2rem;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.nav-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 700;
+  font-size: 15px;
+  color: var(--text);
+  text-decoration: none;
+}
+.nav-logo {
+  width: 28px;
+  height: 28px;
+  background: var(--red);
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.nav-logo svg { width: 16px; height: 16px; fill: white; }
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  list-style: none;
+}
+.nav-links a {
+  text-decoration: none;
+  color: var(--text-muted);
+  font-size: 13px;
+  font-weight: 500;
+  padding: 6px 12px;
+  border-radius: var(--radius-sm);
+  transition: all 0.15s;
+}
+.nav-links a:hover { color: var(--text); background: var(--gray-100); }
+.nav-version {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--text-muted);
+  background: var(--gray-100);
+  padding: 3px 8px;
+  border-radius: 4px;
+}
+
+/* ── HERO ── */
+.hero {
+  position: relative;
+  overflow: hidden;
+  background: #071C14;
+  color: white;
+  padding: 80px 2rem 72px;
+  text-align: center;
+}
+.hero-bg {
+  position: absolute;
+  inset: 0;
+  background: 
+    radial-gradient(ellipse 65% 80% at 15% 60%, rgba(29,158,117,0.30) 0%, transparent 60%),
+    radial-gradient(ellipse 55% 65% at 85% 25%, rgba(15,110,86,0.22) 0%, transparent 55%),
+    radial-gradient(ellipse 45% 55% at 55% 85%, rgba(4,52,44,0.40) 0%, transparent 60%);
+}
+.hero-grid {
+  position: absolute;
+  inset: 0;
+  background-image: linear-gradient(rgba(29,158,117,0.06) 1px, transparent 1px),
+                    linear-gradient(90deg, rgba(29,158,117,0.06) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+.hero-content { position: relative; z-index: 1; max-width: 700px; margin: 0 auto; }
+.hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(29,158,117,0.20);
+  border: 1px solid rgba(29,158,117,0.50);
+  color: #5DCAA5;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 5px 12px;
+  border-radius: 100px;
+  margin-bottom: 24px;
+}
+.hero h1 {
+  font-size: clamp(32px, 5vw, 52px);
+  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+  margin-bottom: 16px;
+}
+.hero h1 em {
+  font-style: normal;
+  background: linear-gradient(135deg, #5DCAA5, #1D9E75);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.hero p {
+  font-size: 17px;
+  color: rgba(255,255,255,0.6);
+  max-width: 520px;
+  margin: 0 auto 36px;
+  font-weight: 400;
+  line-height: 1.6;
+}
+.hero-stats {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  flex-wrap: wrap;
+}
+.hero-stat {
+  padding: 16px 32px;
+  text-align: center;
+  border-right: 1px solid rgba(29,158,117,0.15);
+}
+.hero-stat:last-child { border-right: none; }
+.hero-stat-val {
+  font-size: 28px;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1;
+  margin-bottom: 4px;
+}
+.hero-stat-lbl { font-size: 12px; color: rgba(255,255,255,0.45); font-weight: 500; }
+
+/* ── MAIN LAYOUT ── */
+.main { max-width: 1100px; margin: 0 auto; padding: 60px 2rem 100px; }
+.section-gap { margin-bottom: 72px; }
+
+/* ── SECTION HEADER ── */
+.section-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  margin-bottom: 28px;
+}
+.section-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+.section-title { font-size: 22px; font-weight: 800; letter-spacing: -0.02em; margin-bottom: 4px; }
+.section-desc { font-size: 14px; color: var(--text-muted); }
+
+/* ── FORM CARD ── */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+}
+.card-header {
+  padding: 20px 24px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--gray-50);
+}
+.card-header-title { font-size: 14px; font-weight: 700; color: var(--text); }
+.card-header-sub { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+.required-note {
+  font-size: 11px;
+  color: var(--red);
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.card-body { padding: 24px; }
+
+.form-grid { display: grid; gap: 16px; }
+.form-row-2 { grid-template-columns: 1fr 1fr; }
+.form-row-3 { grid-template-columns: 1fr 1fr 1fr; }
+.form-group { display: flex; flex-direction: column; gap: 6px; }
+.form-label {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.req { color: var(--red); }
+.form-input {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-sm);
+  font-family: var(--font);
+  font-size: 13px;
+  color: var(--text);
+  background: var(--gray-50);
+  transition: border-color 0.15s, box-shadow 0.15s;
+  outline: none;
+  resize: vertical;
+}
+.form-input:focus { border-color: var(--red); box-shadow: 0 0 0 3px rgba(200,16,46,0.08); background: white; }
+.form-input::placeholder { color: var(--gray-400); }
+.form-hint { font-size: 11px; color: var(--text-muted); }
+
+/* ── TAGS / PILLS ── */
+.tag-group { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 2px; }
+.tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 10px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  border: 1.5px solid transparent;
+  transition: all 0.15s;
+  user-select: none;
+}
+.tag-new { background: var(--blue-light); color: var(--blue); }
+.tag-dev { background: var(--green-light); color: var(--green); }
+.tag-des { background: var(--purple-light); color: var(--purple); }
+.tag-hot { background: var(--red-light); color: var(--red); }
+.tag:hover { filter: brightness(0.95); transform: translateY(-1px); }
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 10px;
+  border-radius: 100px;
+  font-size: 11px;
+  font-weight: 700;
+}
+.badge-crit { background: #FDEDF0; color: #9B0B22; }
+.badge-high { background: #FEF3E0; color: #8B5500; }
+.badge-med  { background: #FFF9E0; color: #7A6500; }
+.badge-low  { background: var(--green-light); color: var(--green); }
+
+/* ── PIPELINE ── */
+.pipeline-wrap { overflow-x: auto; padding: 8px 0 16px; }
+.pipeline {
+  display: flex;
+  align-items: flex-start;
+  gap: 0;
+  min-width: max-content;
+  padding: 4px 4px;
+}
+.pip-type-label {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.pip-type-label::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+.pip-section { margin-bottom: 28px; }
+.pip-step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 90px;
+}
+.pip-circle {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 700;
+  border: 2px solid transparent;
+  position: relative;
+  z-index: 1;
+  text-align: center;
+  line-height: 1.2;
+}
+.pip-lbl {
+  font-size: 10px;
+  color: var(--text-muted);
+  margin-top: 7px;
+  text-align: center;
+  max-width: 80px;
+  line-height: 1.35;
+  font-weight: 500;
+}
+.pip-connector {
+  width: 40px;
+  height: 2px;
+  background: var(--gray-200);
+  margin-top: 21px;
+  position: relative;
+  flex-shrink: 0;
+}
+.pip-connector::after {
+  content: '';
+  position: absolute;
+  right: -5px;
+  top: -4px;
+  border: 5px solid transparent;
+  border-left-color: var(--gray-200);
+}
+.pip-c-gray { background: var(--gray-100); color: var(--gray-600); border-color: var(--gray-200); }
+.pip-c-gold { background: var(--gold-light); color: #8B5500; border-color: #FAC770; }
+.pip-c-purple { background: var(--purple-light); color: var(--purple); border-color: #C4AAFA; }
+.pip-c-blue { background: var(--blue-light); color: var(--blue); border-color: #85B7EB; }
+.pip-c-teal { background: #E0F5EE; color: #0B6E52; border-color: #7DD5B4; }
+.pip-c-green { background: var(--green-light); color: var(--green); border-color: #80D0A8; }
+
+/* ── SLA TABLE ── */
+.sla-table { width: 100%; border-collapse: collapse; }
+.sla-table th {
+  background: var(--gray-50);
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
+  padding: 12px 16px;
+  text-align: left;
+  border-bottom: 1px solid var(--border);
+}
+.sla-table td {
+  padding: 12px 16px;
+  font-size: 13px;
+  border-bottom: 1px solid var(--border);
+  vertical-align: middle;
+}
+.sla-table tr:last-child td { border-bottom: none; }
+.sla-table tr:hover td { background: var(--gray-50); }
+.sla-urgent { color: var(--red); font-weight: 700; font-family: var(--mono); font-size: 12px; }
+.sla-normal { font-family: var(--mono); font-size: 12px; color: var(--text); }
+.sla-na { color: var(--gray-400); font-size: 12px; }
+.sla-stage { font-weight: 600; }
+
+/* ── PRIORITY MATRIX ── */
+.priority-grid {
+  display: grid;
+  grid-template-columns: 140px 1fr 1fr;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+.pg-header {
+  background: var(--gray-50);
+  padding: 10px 14px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
+  border-bottom: 1px solid var(--border);
+  border-right: 1px solid var(--border);
+}
+.pg-header:last-child { border-right: none; }
+.pg-row { display: contents; }
+.pg-cell {
+  padding: 14px;
+  font-size: 13px;
+  border-bottom: 1px solid var(--border);
+  border-right: 1px solid var(--border);
+  vertical-align: top;
+}
+.pg-cell:last-child { border-right: none; }
+.pg-row:last-child .pg-cell { border-bottom: none; }
+.pg-action { font-size: 12px; color: var(--text-muted); }
+
+/* ── ESCALATION ── */
+.esc-timeline { display: flex; flex-direction: column; gap: 0; position: relative; }
+.esc-timeline::before {
+  content: '';
+  position: absolute;
+  left: 21px;
+  top: 44px;
+  bottom: 44px;
+  width: 2px;
+  background: var(--gray-200);
+}
+.esc-item {
+  display: flex;
+  gap: 16px;
+  padding: 0 0 28px;
+  position: relative;
+}
+.esc-item:last-child { padding-bottom: 0; }
+.esc-dot {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 800;
+  flex-shrink: 0;
+  position: relative;
+  z-index: 1;
+  border: 2px solid white;
+  box-shadow: var(--shadow-sm);
+}
+.esc-content {
+  flex: 1;
+  padding-top: 10px;
+}
+.esc-title { font-size: 14px; font-weight: 700; margin-bottom: 4px; }
+.esc-text { font-size: 13px; color: var(--text-muted); line-height: 1.6; margin-bottom: 6px; }
+.esc-who {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-muted);
+  background: var(--gray-100);
+  padding: 3px 10px;
+  border-radius: 4px;
+}
+
+/* ── KPI ── */
+.kpi-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+.kpi-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px;
+  text-align: center;
+  box-shadow: var(--shadow-sm);
+  transition: transform 0.15s, box-shadow 0.15s;
+  position: relative;
+  overflow: hidden;
+}
+.kpi-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+}
+.kpi-card.kpi-red::before { background: var(--red); }
+.kpi-card.kpi-gold::before { background: var(--gold); }
+.kpi-card.kpi-green::before { background: var(--green); }
+.kpi-card.kpi-blue::before { background: var(--blue); }
+.kpi-card.kpi-purple::before { background: var(--purple); }
+.kpi-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
+.kpi-val {
+  font-size: 30px;
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  margin-bottom: 4px;
+  font-family: var(--mono);
+}
+.kpi-lbl { font-size: 12px; color: var(--text-muted); font-weight: 500; margin-bottom: 6px; line-height: 1.4; }
+.kpi-target { font-size: 11px; color: var(--text-muted); }
+.kpi-target span { font-weight: 700; }
+
+/* ── ROLES ── */
+.roles-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.role-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px;
+  box-shadow: var(--shadow-sm);
+}
+.role-header { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
+.role-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  flex-shrink: 0;
+}
+.role-name { font-size: 14px; font-weight: 700; }
+.role-sub { font-size: 12px; color: var(--text-muted); }
+.role-items { list-style: none; display: flex; flex-direction: column; gap: 6px; }
+.role-items li {
+  font-size: 13px;
+  color: var(--text-muted);
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  line-height: 1.5;
+}
+.role-items li::before {
+  content: '';
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--border-strong);
+  flex-shrink: 0;
+  margin-top: 6px;
+}
+
+/* ── JIRA RULES ── */
+.jira-rules {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+  margin-top: 16px;
+}
+.jira-rule {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 12px;
+  background: var(--gray-50);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+}
+.jira-icon {
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  background: var(--blue-light);
+  color: var(--blue);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  flex-shrink: 0;
+}
+.jira-text { font-size: 12px; color: var(--text-muted); line-height: 1.5; }
+.jira-text strong { color: var(--text); font-weight: 700; display: block; margin-bottom: 1px; }
+
+/* ── TASK TYPES ── */
+.tasktype-grid { display: flex; flex-direction: column; gap: 0; }
+.tasktype-row {
+  display: grid;
+  grid-template-columns: 220px 1fr auto;
+  gap: 0;
+  align-items: center;
+  padding: 18px 24px;
+  border-bottom: 1px solid var(--border);
+  transition: background 0.15s;
+}
+.tasktype-row:last-child { border-bottom: none; }
+.tasktype-row:hover { background: var(--gray-50); }
+.tasktype-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  width: fit-content;
+}
+.tasktype-desc { font-size: 13px; color: var(--text-muted); padding: 0 20px; line-height: 1.5; }
+.tasktype-sla {
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 500;
+  padding: 4px 10px;
+  border-radius: 100px;
+  white-space: nowrap;
+}
+.flow-mini {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  overflow-x: auto;
+  padding: 12px 24px 16px;
+  background: var(--gray-50);
+  border-bottom: 1px solid var(--border);
+  scrollbar-width: thin;
+}
+.flow-mini:last-child { border-bottom: none; }
+.fm-step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 72px;
+}
+.fm-dot {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  font-weight: 700;
+  border: 1.5px solid transparent;
+  text-align: center;
+  line-height: 1.2;
+  flex-shrink: 0;
+}
+.fm-lbl { font-size: 9px; color: var(--text-muted); margin-top: 5px; text-align: center; max-width: 64px; line-height: 1.3; font-weight: 500; }
+.fm-arrow {
+  width: 28px; height: 1.5px;
+  background: var(--gray-200);
+  flex-shrink: 0; margin-top: -10px; position: relative;
+}
+.fm-arrow::after {
+  content:''; position:absolute; right:-4px; top:-3.5px;
+  border: 4px solid transparent; border-left-color: var(--gray-200);
+}
+.fm-c-gray { background: var(--gray-100); color: var(--gray-600); border-color: var(--gray-200); }
+.fm-c-gold { background: #FEF3E0; color: #8B5500; border-color: #FAC770; }
+.fm-c-purple { background: #F0EBFB; color: var(--purple); border-color: #C4AAFA; }
+.fm-c-blue { background: var(--blue-light); color: var(--blue); border-color: #85B7EB; }
+.fm-c-teal { background: #E0F5EE; color: #0B6E52; border-color: #7DD5B4; }
+.fm-c-green { background: var(--green-light); color: var(--green); border-color: #80D0A8; }
+.fm-c-red { background: #FDEDF0; color: var(--red); border-color: var(--red-mid); }
+.fm-c-amber { background: #FEF3E0; color: #8B5500; border-color: #FAC770; }
+
+/* ── FOOTER ── */
+footer {
+  background: #071C14;
+  color: rgba(255,255,255,0.4);
+  text-align: center;
+  padding: 32px 2rem;
+  font-size: 12px;
+}
+footer strong { color: rgba(255,255,255,0.8); }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 700px) {
+  .form-row-2, .form-row-3 { grid-template-columns: 1fr; }
+  .kpi-grid { grid-template-columns: repeat(2, 1fr); }
+  .roles-grid { grid-template-columns: 1fr; }
+  .priority-grid { grid-template-columns: 1fr; }
+  .hero-stat { padding: 12px 20px; }
+  nav { padding: 0 1rem; }
+  .main { padding: 40px 1rem 60px; }
+  .nav-links { display: none; }
+  /* Quick-start 3 cards stack on mobile */
+  section[class="section-gap"]:first-child > div > div[style*="grid-template-columns:repeat(3,1fr)"] {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .kpi-grid { grid-template-columns: 1fr; }
+  .jira-rules { grid-template-columns: 1fr; }
+  .hero-stats { flex-direction: column; gap: 0; }
+  .hero-stat { border-right: none; border-bottom: 1px solid rgba(255,255,255,0.08); }
+}
+
+/* ── ANIMATIONS ── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.fade-up { animation: fadeUp 0.5s ease both; }
+.delay-1 { animation-delay: 0.1s; }
+.delay-2 { animation-delay: 0.2s; }
+.delay-3 { animation-delay: 0.3s; }
+
+.divider {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin: 24px 0;
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-brand">
+    <img src="data:image/png;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/4gHYSUNDX1BST0ZJTEUAAQEAAAHIAAAAAAQwAABtbnRyUkdCIFhZWiAH4AABAAEAAAAAAABhY3NwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAA9tYAAQAAAADTLQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAlkZXNjAAAA8AAAACRyWFlaAAABFAAAABRnWFlaAAABKAAAABRiWFlaAAABPAAAABR3dHB0AAABUAAAABRyVFJDAAABZAAAAChnVFJDAAABZAAAAChiVFJDAAABZAAAAChjcHJ0AAABjAAAADxtbHVjAAAAAAAAAAEAAAAMZW5VUwAAAAgAAAAcAHMAUgBHAEJYWVogAAAAAAAAb6IAADj1AAADkFhZWiAAAAAAAABimQAAt4UAABjaWFlaIAAAAAAAACSgAAAPhAAAts9YWVogAAAAAAAA9tYAAQAAAADTLXBhcmEAAAAAAAQAAAACZmYAAPKnAAANWQAAE9AAAApbAAAAAAAAAABtbHVjAAAAAAAAAAEAAAAMZW5VUwAAACAAAAAcAEcAbwBvAGcAbABlACAASQBuAGMALgAgADIAMAAxADb/2wBDAAUDBAQEAwUEBAQFBQUGBwwIBwcHBw8LCwkMEQ8SEhEPERETFhwXExQaFRERGCEYGh0dHx8fExciJCIeJBweHx7/2wBDAQUFBQcGBw4ICA4eFBEUHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh7/wAARCAJYAlgDASIAAhEBAxEB/8QAHQABAQABBQEBAAAAAAAAAAAAAAgHAgQFBgkDAf/EAF0QAQABAgMCBQwMCQcKBQUAAAABAgMEBQYHEQgSITFBExcYN1FVVmGRlNHSCRQVFiJTcXWBkrGzMjhCdJOVobK0MzQ2YnKEwSNDUlRXc6LD1OIkRGSC8IOlwtPh/8QAHAEBAAICAwEAAAAAAAAAAAAAAAUGBAcBAgMI/8QAPhEBAAECAwIJCAgGAwAAAAAAAAECAwQFESExBhITFUFRUnGhFjNhgZGSscEHFCIyNXKy0VNUVYKT4SM00v/aAAwDAQACEQMRAD8AssAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAGFeGBtI1Nsw2d5fnmlrmFt4y/mVGGrnEWYuU8SbddU8nd30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AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAf/2Q==" alt="AKFA" style="height:28px;width:auto;object-fit:contain;">
+    Qlik Sense — Workflow
+  </a>
+  <ul class="nav-links">
+    <li><a href="#intake">Приём</a></li>
+    <li><a href="#tasktypes">Типы задач</a></li>
+    <li><a href="#pipeline">Pipeline</a></li>
+    <li><a href="#sla">Сроки</a></li>
+    <li><a href="#roles">Роли</a></li>
+  </ul>
+  <span class="nav-version">v3.1 / 2026</span>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-grid"></div>
+  <div class="hero-content">
+    <div class="hero-badge fade-up">
+      <span>&#9679;</span> Регламент отдела
+    </div>
+    <h1 class="fade-up delay-1">Workflow<br><em>Qlik Sense</em></h1>
+    <p class="fade-up delay-2">Регламент работы отдела для бизнес-заказчиков: как подать задачу, как мы её ведём, кто за что отвечает и в какие сроки ориентироваться.</p>
+    <div class="hero-stats fade-up delay-3">
+      <div class="hero-stat">
+        <div class="hero-stat-val" style="color:#5DCAA5">4</div>
+        <div class="hero-stat-lbl">Типа задач</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-val" style="color:#9FE1CB">5</div>
+        <div class="hero-stat-lbl">Разделов регламента</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-val" style="color:#1D9E75">1</div>
+        <div class="hero-stat-lbl">Точка приёма — Jira</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-val" style="color:#5DCAA5">8</div>
+        <div class="hero-stat-lbl">Статусов на полном цикле</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MAIN -->
+<main class="main">
+
+  <!-- 0. QUICK START (NEW) -->
+  <section class="section-gap" style="margin-top:0">
+    <div style="background:linear-gradient(135deg,#FAFAF9 0%,#F0EFED 100%);border:1px solid var(--border);border-radius:var(--radius-lg);padding:28px 32px;position:relative;overflow:hidden">
+      <div style="position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#1A7A4A 0%,#5DCAA5 100%)"></div>
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:18px">
+        <div style="width:32px;height:32px;border-radius:8px;background:var(--green);color:white;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;font-family:var(--mono)">→</div>
+        <div style="font-size:18px;font-weight:700;color:var(--text)">Как с нами работать — 3 шага</div>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px">
+
+        <div style="background:white;border:1px solid var(--border);border-radius:var(--radius);padding:20px">
+          <div style="font-family:var(--mono);font-size:11px;color:var(--text-muted);font-weight:500;letter-spacing:0.05em;margin-bottom:10px">ШАГ 01</div>
+          <div style="font-size:15px;font-weight:700;color:var(--text);margin-bottom:8px;line-height:1.3">Выберите тип задачи и заполните форму в Jira</div>
+          <div style="font-size:13px;color:var(--text-muted);line-height:1.55">Описание, ожидаемый результат, эталон данных. Чем точнее формулировка — тем меньше итераций.</div>
+        </div>
+
+        <div style="background:white;border:1px solid var(--border);border-radius:var(--radius);padding:20px">
+          <div style="font-family:var(--mono);font-size:11px;color:var(--text-muted);font-weight:500;letter-spacing:0.05em;margin-bottom:10px">ШАГ 02</div>
+          <div style="font-size:15px;font-weight:700;color:var(--text);margin-bottom:8px;line-height:1.3">Дождитесь ответа PM с оценкой и сроком</div>
+          <div style="font-size:13px;color:var(--text-muted);line-height:1.55">PM проанализирует запрос, согласует уточнения и зафиксирует срок выполнения в задаче Jira.</div>
+        </div>
+
+        <div style="background:white;border:1px solid var(--border);border-radius:var(--radius);padding:20px">
+          <div style="font-family:var(--mono);font-size:11px;color:var(--text-muted);font-weight:500;letter-spacing:0.05em;margin-bottom:10px">ШАГ 03</div>
+          <div style="font-size:15px;font-weight:700;color:var(--text);margin-bottom:8px;line-height:1.3">Будьте на связи на этапах теста и UAT</div>
+          <div style="font-size:13px;color:var(--text-muted);line-height:1.55">Своевременные ответы и согласования напрямую влияют на скорость публикации в Production.</div>
+        </div>
+
+      </div>
+      <div style="margin-top:18px;padding:12px 16px;background:white;border:1px solid var(--border);border-radius:var(--radius-sm);font-size:13px;color:var(--text-muted);line-height:1.55">
+        <strong style="color:var(--text)">Важно:</strong> запросы вне Jira (мессенджеры, e-mail, устные просьбы) в работу не принимаются. Это правило защищает обе стороны: заказчик получает прозрачную историю задачи, команда — корректную приоритизацию.
+      </div>
+    </div>
+  </section>
+
+  <!-- 1. INTAKE FORM -->
+  <section id="intake" class="section-gap">
+    <div class="section-header">
+      <div class="section-icon" style="background:#E8F0FA">📋</div>
+      <div>
+        <div class="section-title">Форма приёма задачи</div>
+        <div class="section-desc">Jira-форма запроса в отдел Qlik Sense. Задача не берётся в работу без обязательных полей.</div>
+      </div>
+    </div>
+
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);box-shadow:var(--shadow-sm);max-width:780px">
+
+      <!-- Jira-style breadcrumb + header -->
+      <div style="padding:20px 28px 16px;border-bottom:1px solid var(--border)">
+        <div style="font-size:12px;color:var(--text-muted);margin-bottom:10px">
+          <span style="color:#1B4F8A;cursor:pointer">Центр поддержки</span>
+          <span style="margin:0 6px;color:var(--gray-400)">/</span>
+          <span style="color:#1B4F8A;cursor:pointer">Qlik Sense</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:12px">
+          <svg width="28" height="20" viewBox="0 0 56 40" fill="none"><circle cx="12" cy="20" r="10" fill="#009845"/><path d="M12 10C17.5 10 22 14.5 22 20H12V10Z" fill="#6FBA2C"/></svg>
+          <span style="font-size:20px;font-weight:700;color:var(--text)">Qlik Sense</span>
+        </div>
+        <p style="font-size:13px;color:var(--text-muted);margin-top:8px">Добро пожаловать! С помощью предоставленных опций можно создать запрос для проекта «QLIK».</p>
+      </div>
+
+      <!-- Type selector -->
+      <div style="padding:20px 28px 0">
+        <div style="font-size:13px;font-weight:500;color:var(--text);margin-bottom:10px">Чем мы можем помочь?</div>
+        <div id="jira-type-new" onclick="jiraSwitch('new')" style="display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border:2px solid #1B4F8A;border-radius:var(--radius-sm);cursor:pointer;margin-bottom:8px;background:var(--blue-light);transition:all 0.15s">
+          <div style="display:flex;align-items:center;gap:12px">
+            <div style="width:32px;height:32px;background:#1B4F8A;border-radius:6px;display:flex;align-items:center;justify-content:center">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 9h6M9 13h6M9 17h4"/></svg>
+            </div>
+            <div>
+              <div style="font-size:14px;font-weight:600;color:#1B4F8A">Новый отчет</div>
+              <div style="font-size:12px;color:var(--text-muted)">Создание нового отчёта или дашборда.</div>
+            </div>
+          </div>
+          <svg id="arrow-new" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1B4F8A" stroke-width="2" style="transform:rotate(180deg);transition:transform 0.2s"><path d="M6 9l6 6 6-6"/></svg>
+        </div>
+        <div id="jira-type-support" onclick="jiraSwitch('support')" style="display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border:1px solid var(--border);border-radius:var(--radius-sm);cursor:pointer;margin-bottom:20px;background:var(--surface);transition:all 0.15s">
+          <div style="display:flex;align-items:center;gap:12px">
+            <div style="width:32px;height:32px;background:var(--gray-100);border-radius:6px;display:flex;align-items:center;justify-content:center">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--text-muted)" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14M12 2v2M12 20v2M2 12h2M20 12h2"/></svg>
+            </div>
+            <div>
+              <div style="font-size:14px;font-weight:600;color:var(--text)">Поддержка и изменения</div>
+              <div style="font-size:12px;color:var(--text-muted)">Ошибки, некорректные данные или изменения.</div>
+            </div>
+          </div>
+          <svg id="arrow-support" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--text-muted)" stroke-width="2" style="transition:transform 0.2s"><path d="M6 9l6 6 6-6"/></svg>
+        </div>
+      </div>
+
+      <!-- Required note -->
+      <div style="padding:0 28px 4px;font-size:12px;color:var(--text-muted)">
+        Обязательные поля отмечены звёздочкой <span style="color:#C8102E;font-weight:700">*</span>
+      </div>
+
+      <!-- FORM: Новый отчет -->
+      <div id="form-new" style="padding:16px 28px 28px">
+        <div class="form-group" style="margin-bottom:16px">
+          <label class="form-label" style="font-size:13px;text-transform:none;letter-spacing:0;font-weight:500;color:var(--text);margin-bottom:6px">Тема <span style="color:#C8102E">*</span></label>
+          <input class="form-input" type="text" placeholder="" style="border-radius:3px;font-size:14px">
+        </div>
+        <div class="form-group" style="margin-bottom:16px">
+          <label class="form-label" style="font-size:13px;text-transform:none;letter-spacing:0;font-weight:500;color:var(--text);margin-bottom:6px">Описание <span style="color:#C8102E">*</span></label>
+          <div style="border:1px solid var(--border-strong);border-radius:3px;overflow:hidden">
+            <div style="display:flex;align-items:center;gap:2px;padding:6px 10px;border-bottom:1px solid var(--border);background:var(--gray-50);flex-wrap:wrap">
+              <select style="font-size:11px;border:1px solid var(--border);border-radius:3px;padding:2px 4px;background:var(--surface);color:var(--text);height:24px">
+                <option>Обычный текст</option><option>Заголовок 1</option><option>Заголовок 2</option>
+              </select>
+              <div style="width:1px;height:18px;background:var(--border);margin:0 4px"></div>
+              <button style="border:none;background:none;padding:3px 5px;cursor:pointer;border-radius:2px;font-weight:700;font-size:13px;color:var(--text)">B</button>
+              <button style="border:none;background:none;padding:3px 5px;cursor:pointer;border-radius:2px;font-style:italic;font-size:13px;color:var(--text)">I</button>
+              <button style="border:none;background:none;padding:3px 5px;cursor:pointer;border-radius:2px;font-size:12px;color:var(--text)">···</button>
+              <div style="width:1px;height:18px;background:var(--border);margin:0 4px"></div>
+              <button style="border:none;background:none;padding:3px 5px;cursor:pointer;border-radius:2px;font-size:12px;color:var(--text)">A</button>
+              <div style="width:1px;height:18px;background:var(--border);margin:0 4px"></div>
+              <button style="border:none;background:none;padding:3px 5px;cursor:pointer;border-radius:2px;font-size:11px;color:var(--text)">≡</button>
+              <button style="border:none;background:none;padding:3px 5px;cursor:pointer;border-radius:2px;font-size:11px;color:var(--text)">⁼</button>
+              <button style="border:none;background:none;padding:3px 5px;cursor:pointer;border-radius:2px;font-size:11px;color:var(--text)">🔗</button>
+              <button style="border:none;background:none;padding:3px 5px;cursor:pointer;border-radius:2px;font-size:11px;color:var(--text)">🖼</button>
+              <button style="border:none;background:none;padding:3px 5px;cursor:pointer;border-radius:2px;font-size:11px;color:var(--text)">@</button>
+              <button style="border:none;background:none;padding:3px 5px;cursor:pointer;border-radius:2px;font-size:11px;color:var(--text)">⊞</button>
+              <button style="border:none;background:none;padding:3px 5px;cursor:pointer;border-radius:2px;font-size:11px;color:var(--text)">&lt;/&gt;</button>
+              <button style="border:none;background:none;padding:3px 5px;cursor:pointer;border-radius:2px;font-size:11px;color:var(--text)">ℹ</button>
+              <button style="border:none;background:none;padding:3px 5px;cursor:pointer;border-radius:2px;font-size:11px;color:var(--text)">+</button>
+            </div>
+            <textarea style="width:100%;min-height:120px;border:none;outline:none;padding:12px;font-size:14px;font-family:var(--font);resize:vertical;background:var(--surface);color:var(--text)"></textarea>
+          </div>
+        </div>
+        <div class="form-group" style="margin-bottom:24px">
+          <label class="form-label" style="font-size:13px;text-transform:none;letter-spacing:0;font-weight:500;color:var(--text);margin-bottom:6px">Вложение <span style="color:#C8102E">*</span></label>
+          <div style="border:1px dashed var(--border-strong);border-radius:3px;padding:24px;text-align:center">
+            <p style="font-size:13px;color:var(--text-muted);margin-bottom:12px">Перетащите файлы, вставьте скриншоты или воспользуйтесь обозревателем</p>
+            <button style="padding:6px 14px;border:1px solid var(--border-strong);border-radius:3px;background:var(--surface);font-size:13px;cursor:pointer;color:var(--text);font-family:var(--font)">Обзор</button>
+          </div>
+        </div>
+        <div style="display:flex;align-items:center;gap:12px">
+          <button style="padding:8px 20px;background:#1B4F8A;color:white;border:none;border-radius:3px;font-size:14px;font-weight:500;cursor:pointer;font-family:var(--font)">Отправить</button>
+          <button style="padding:8px 16px;background:none;border:none;font-size:14px;color:var(--text-muted);cursor:pointer;font-family:var(--font)">Отмена</button>
+        </div>
+      </div>
+
+      <!-- FORM: Поддержка и изменения -->
+      <div id="form-support" style="padding:16px 28px 28px;display:none">
+        <div class="form-group" style="margin-bottom:16px">
+          <label class="form-label" style="font-size:13px;text-transform:none;letter-spacing:0;font-weight:500;color:var(--text);margin-bottom:6px">Тема <span style="color:#C8102E">*</span></label>
+          <input class="form-input" type="text" placeholder="" style="border-radius:3px;font-size:14px">
+        </div>
+        <div class="form-group" style="margin-bottom:16px">
+          <label class="form-label" style="font-size:13px;text-transform:none;letter-spacing:0;font-weight:500;color:var(--text);margin-bottom:6px">Описание <span style="color:#C8102E">*</span></label>
+          <div style="border:1px solid var(--border-strong);border-radius:3px;overflow:hidden">
+            <div style="display:flex;align-items:center;gap:2px;padding:6px 10px;border-bottom:1px solid var(--border);background:var(--gray-50);flex-wrap:wrap">
+              <select style="font-size:11px;border:1px solid var(--border);border-radius:3px;padding:2px 4px;background:var(--surface);color:var(--text);height:24px">
+                <option>Обычный текст</option><option>Заголовок 1</option><option>Заголовок 2</option>
+              </select>
+              <div style="width:1px;height:18px;background:var(--border);margin:0 4px"></div>
+              <button style="border:none;background:none;padding:3px 5px;cursor:pointer;border-radius:2px;font-weight:700;font-size:13px;color:var(--text)">B</button>
+              <button style="border:none;background:none;padding:3px 5px;cursor:pointer;border-radius:2px;font-style:italic;font-size:13px;color:var(--text)">I</button>
+              <button style="border:none;background:none;padding:3px 5px;cursor:pointer;border-radius:2px;font-size:11px;color:var(--text)">🔗</button>
+              <button style="border:none;background:none;padding:3px 5px;cursor:pointer;border-radius:2px;font-size:11px;color:var(--text)">🖼</button>
+              <button style="border:none;background:none;padding:3px 5px;cursor:pointer;border-radius:2px;font-size:11px;color:var(--text)">@</button>
+              <button style="border:none;background:none;padding:3px 5px;cursor:pointer;border-radius:2px;font-size:11px;color:var(--text)">⊞</button>
+              <button style="border:none;background:none;padding:3px 5px;cursor:pointer;border-radius:2px;font-size:11px;color:var(--text)">&lt;/&gt;</button>
+              <button style="border:none;background:none;padding:3px 5px;cursor:pointer;border-radius:2px;font-size:11px;color:var(--text)">ℹ</button>
+              <button style="border:none;background:none;padding:3px 5px;cursor:pointer;border-radius:2px;font-size:11px;color:var(--text)">+</button>
+            </div>
+            <textarea style="width:100%;min-height:120px;border:none;outline:none;padding:12px;font-size:14px;font-family:var(--font);resize:vertical;background:var(--surface);color:var(--text)"></textarea>
+          </div>
+        </div>
+        <div class="form-group" style="margin-bottom:16px">
+          <label class="form-label" style="font-size:13px;text-transform:none;letter-spacing:0;font-weight:500;color:var(--text);margin-bottom:6px">Вложение <span style="color:#C8102E">*</span></label>
+          <div style="border:1px dashed var(--border-strong);border-radius:3px;padding:24px;text-align:center">
+            <p style="font-size:13px;color:var(--text-muted);margin-bottom:12px">Перетащите файлы, вставьте скриншоты или воспользуйтесь обозревателем</p>
+            <button style="padding:6px 14px;border:1px solid var(--border-strong);border-radius:3px;background:var(--surface);font-size:13px;cursor:pointer;color:var(--text);font-family:var(--font)">Обзор</button>
+          </div>
+        </div>
+        <!-- Info banner -->
+        <div style="display:flex;align-items:flex-start;gap:10px;padding:12px 14px;background:#E8F0FA;border-radius:3px;margin-bottom:16px">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="#1B4F8A" style="flex-shrink:0;margin-top:1px"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01" stroke="white" stroke-width="2" stroke-linecap="round" fill="none"/></svg>
+          <span style="font-size:13px;color:#1B4F8A">Опишите ошибку как можно подробнее — это значительно ускорит решение.</span>
+        </div>
+        <div class="form-group" style="margin-bottom:16px">
+          <label class="form-label" style="font-size:13px;text-transform:none;letter-spacing:0;font-weight:500;color:var(--text);margin-bottom:6px">Приоритет <span style="color:#C8102E">*</span></label>
+          <select class="form-input" style="border-radius:3px;font-size:14px;height:40px;cursor:pointer">
+            <option value="">Выберите...</option>
+            <option>Критический — ошибка в Production</option>
+            <option>Высокий — блокирует работу</option>
+            <option>Средний — стандартный запрос</option>
+            <option>Низкий — не срочно</option>
+          </select>
+        </div>
+        <div class="form-group" style="margin-bottom:16px">
+          <label class="form-label" style="font-size:13px;text-transform:none;letter-spacing:0;font-weight:500;color:var(--text);margin-bottom:6px">Проект <span style="color:#C8102E">*</span></label>
+          <select class="form-input" style="border-radius:3px;font-size:14px;height:40px;cursor:pointer">
+            <option value="">Выберите...</option>
+            <option>AKFA Plast</option>
+            <option>Radiator</option>
+            <option>Benkam</option>
+            <option>MMG</option>
+            <option>Nukus IMZO</option>
+            <option>Головной офис</option>
+            <option>Внутренний проект</option>
+          </select>
+        </div>
+        <div class="form-group" style="margin-bottom:24px">
+          <label class="form-label" style="font-size:13px;text-transform:none;letter-spacing:0;font-weight:500;color:var(--text);margin-bottom:6px">Объект <span style="color:#C8102E">*</span></label>
+          <select class="form-input" style="border-radius:3px;font-size:14px;height:40px;cursor:pointer">
+            <option value="">Выберите...</option>
+            <option>Финансы</option>
+            <option>Производство</option>
+            <option>Снабжение</option>
+            <option>Бухгалтерия</option>
+            <option>HR</option>
+            <option>Логистика</option>
+            <option>Планирование</option>
+          </select>
+        </div>
+        <div style="display:flex;align-items:center;gap:12px">
+          <button style="padding:8px 20px;background:#1B4F8A;color:white;border:none;border-radius:3px;font-size:14px;font-weight:500;cursor:pointer;font-family:var(--font)">Отправить</button>
+          <button style="padding:8px 16px;background:none;border:none;font-size:14px;color:var(--text-muted);cursor:pointer;font-family:var(--font)">Отмена</button>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <script>
+  function jiraSwitch(type) {
+    const isNew = type === 'new';
+    const newEl = document.getElementById('jira-type-new');
+    const supEl = document.getElementById('jira-type-support');
+    const formNew = document.getElementById('form-new');
+    const formSup = document.getElementById('form-support');
+    const arrNew = document.getElementById('arrow-new');
+    const arrSup = document.getElementById('arrow-support');
+    newEl.style.border = isNew ? '2px solid #1B4F8A' : '1px solid var(--border-strong)';
+    newEl.style.background = isNew ? 'var(--blue-light)' : 'var(--surface)';
+    newEl.querySelector('div div:first-child').style.color = isNew ? '#1B4F8A' : 'var(--text)';
+    supEl.style.border = !isNew ? '2px solid #1B4F8A' : '1px solid var(--border-strong)';
+    supEl.style.background = !isNew ? 'var(--blue-light)' : 'var(--surface)';
+    supEl.querySelector('div div:first-child').style.color = !isNew ? '#1B4F8A' : 'var(--text)';
+    formNew.style.display = isNew ? 'block' : 'none';
+    formSup.style.display = !isNew ? 'block' : 'none';
+    arrNew.style.transform = isNew ? 'rotate(180deg)' : 'rotate(0deg)';
+    arrSup.style.transform = !isNew ? 'rotate(180deg)' : 'rotate(0deg)';
+    newEl.querySelector('.jira-icon-wrap').style.background = isNew ? '#1B4F8A' : 'var(--gray-100)';
+    supEl.querySelector('.jira-icon-wrap').style.background = !isNew ? '#1B4F8A' : 'var(--gray-100)';
+  }
+  </script>
+
+  <!-- 2. TASK TYPES -->
+  <section id="tasktypes" class="section-gap">
+    <div class="section-header">
+      <div class="section-icon" style="background:#FDEDF0">🗂</div>
+      <div>
+        <div class="section-title">Типы задач — 4 типа заявок</div>
+        <div class="section-desc">Перед созданием заявки в Jira выберите корректный тип. От типа зависят маршрут, набор статусов и состав участников.</div>
+      </div>
+    </div>
+    <div class="card">
+
+      <!-- Тип «Проект» -->
+      <div class="tasktype-row">
+        <div><span class="tasktype-badge" style="background:#EAF3DE;color:#27500A">Проект</span></div>
+        <div class="tasktype-desc">Создание нового приложения или отчёта Qlik Sense с нуля. Полный цикл: ТЗ/ФС, разработка, код-ревью, тест, UAT, ввод в эксплуатацию.</div>
+        <div class="tasktype-sla" style="background:#EAF3DE;color:#27500A">8 статусов</div>
+      </div>
+      <div class="flow-mini">
+        <div class="fm-step"><div class="fm-dot fm-c-gray">В очередь</div><div class="fm-lbl">оценка реализуемости</div></div>
+        <div class="fm-arrow"></div>
+        <div class="fm-step"><div class="fm-dot fm-c-amber">ТЗ / ФС</div><div class="fm-lbl">согласование</div></div>
+        <div class="fm-arrow"></div>
+        <div class="fm-step"><div class="fm-dot fm-c-gold">В работе</div><div class="fm-lbl">разработка</div></div>
+        <div class="fm-arrow"></div>
+        <div class="fm-step"><div class="fm-dot fm-c-purple">Код-ревью</div><div class="fm-lbl">проверка TL</div></div>
+        <div class="fm-arrow"></div>
+        <div class="fm-step"><div class="fm-dot fm-c-blue">Тест</div><div class="fm-lbl">внутр. тестирование</div></div>
+        <div class="fm-arrow"></div>
+        <div class="fm-step"><div class="fm-dot fm-c-teal">UAT</div><div class="fm-lbl">приёмка бизнесом</div></div>
+        <div class="fm-arrow"></div>
+        <div class="fm-step"><div class="fm-dot fm-c-green">Выполнено</div><div class="fm-lbl">принято ✓</div></div>
+      </div>
+
+      <!-- Тип «Доработка» -->
+      <div class="tasktype-row">
+        <div><span class="tasktype-badge" style="background:#E6F1FB;color:#0C447C">Доработка</span></div>
+        <div class="tasktype-desc">Расширение и модификация существующих приложений, оптимизация модели данных, листов и премодели, корректировка выражений и формул.</div>
+        <div class="tasktype-sla" style="background:#E6F1FB;color:#0C447C">8 статусов</div>
+      </div>
+      <div class="flow-mini">
+        <div class="fm-step"><div class="fm-dot fm-c-gray">В очередь</div><div class="fm-lbl">оценка реализуемости</div></div>
+        <div class="fm-arrow"></div>
+        <div class="fm-step"><div class="fm-dot fm-c-amber">ТЗ / ФС</div><div class="fm-lbl">упрощённый формат</div></div>
+        <div class="fm-arrow"></div>
+        <div class="fm-step"><div class="fm-dot fm-c-gold">В работе</div><div class="fm-lbl">разработка</div></div>
+        <div class="fm-arrow"></div>
+        <div class="fm-step"><div class="fm-dot fm-c-purple">Код-ревью</div><div class="fm-lbl">проверка TL</div></div>
+        <div class="fm-arrow"></div>
+        <div class="fm-step"><div class="fm-dot fm-c-blue">Тест</div><div class="fm-lbl">внутр. тестирование</div></div>
+        <div class="fm-arrow"></div>
+        <div class="fm-step"><div class="fm-dot fm-c-teal">UAT</div><div class="fm-lbl">приёмка бизнесом</div></div>
+        <div class="fm-arrow"></div>
+        <div class="fm-step"><div class="fm-dot fm-c-green">Выполнено</div><div class="fm-lbl">принято ✓</div></div>
+      </div>
+
+      <!-- Тип «Дизайн» -->
+      <div class="tasktype-row">
+        <div><span class="tasktype-badge" style="background:#EEEDFE;color:#3C3489">Дизайн</span></div>
+        <div class="tasktype-desc">Макеты дашбордов, UI/UX, оформление по корпоративным стандартам — без изменения программного кода, формул и скриптов загрузки.</div>
+        <div class="tasktype-sla" style="background:#EEEDFE;color:#3C3489">6 статусов</div>
+      </div>
+      <div class="flow-mini">
+        <div class="fm-step"><div class="fm-dot fm-c-gray">В очередь</div><div class="fm-lbl">оценка реализуемости</div></div>
+        <div class="fm-arrow"></div>
+        <div class="fm-step"><div class="fm-dot fm-c-gold">В работе</div><div class="fm-lbl">разработка макета</div></div>
+        <div class="fm-arrow"></div>
+        <div class="fm-step"><div class="fm-dot fm-c-blue">Тест</div><div class="fm-lbl">проверка UI-стандартов</div></div>
+        <div class="fm-arrow"></div>
+        <div class="fm-step"><div class="fm-dot fm-c-teal">UAT</div><div class="fm-lbl">приёмка дизайна</div></div>
+        <div class="fm-arrow"></div>
+        <div class="fm-step"><div class="fm-dot fm-c-green">Выполнено</div><div class="fm-lbl">принято ✓</div></div>
+      </div>
+
+      <!-- Тип «Администрирование» -->
+      <div class="tasktype-row" style="border-bottom:none">
+        <div><span class="tasktype-badge" style="background:#FEF3E0;color:#8B5500">Администрирование</span></div>
+        <div class="tasktype-desc">Учётные записи и доступы, лицензии, расписания и подписки, ведение реестров, эксплуатационная документация, обучение, консультации.</div>
+        <div class="tasktype-sla" style="background:#FEF3E0;color:#8B5500">5 статусов</div>
+      </div>
+      <div class="flow-mini" style="border-bottom:none">
+        <div class="fm-step"><div class="fm-dot fm-c-gray">В очередь</div><div class="fm-lbl">оценка</div></div>
+        <div class="fm-arrow"></div>
+        <div class="fm-step"><div class="fm-dot fm-c-gold">В работе</div><div class="fm-lbl">выполнение</div></div>
+        <div class="fm-arrow"></div>
+        <div class="fm-step"><div class="fm-dot fm-c-purple">Код-ревью</div><div class="fm-lbl">проверка TL / 2-го спец-та</div></div>
+        <div class="fm-arrow"></div>
+        <div class="fm-step"><div class="fm-dot fm-c-green">Выполнено</div><div class="fm-lbl">принято ✓</div></div>
+      </div>
+
+      <!-- Cancellation note -->
+      <div style="margin-top:18px;padding:14px 18px;background:#FDEDF0;border:1px solid #F5C0CB;border-radius:var(--radius-sm);display:flex;gap:12px;align-items:flex-start">
+        <div style="font-size:18px;flex-shrink:0;line-height:1.2">⚠️</div>
+        <div style="font-size:13px;line-height:1.6;color:#5A0915">
+          <strong style="color:#3D060B">Статус «Невозможно удовлетворить / Отмена» доступен на любом этапе</strong> — для всех четырёх типов заявок. Заявка переводится в этот статус с комментарием о причине; после корректировки заказчик возвращает её в статус «В очередь» либо закрывает окончательно.
+        </div>
+      </div>
+
+      <!-- Quick rules -->
+      <div style="margin-top:14px;padding:18px 20px;background:var(--gray-50);border:1px solid var(--border);border-radius:var(--radius-sm)">
+        <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:10px;display:flex;align-items:center;gap:8px">
+          <span style="font-size:14px">🧭</span> Правила выбора типа задачи
+        </div>
+        <div style="font-size:13px;color:var(--text-muted);line-height:1.7">
+          <div style="margin-bottom:6px"><strong style="color:var(--text)">Создание нового приложения</strong> с нуля → всегда <em>«Проект»</em>, независимо от объёма.</div>
+          <div style="margin-bottom:6px"><strong style="color:var(--text)">Изменение программного кода</strong> (скрипты, выражения, формулы) → <em>«Доработка»</em>, даже если задача начиналась как визуальная.</div>
+          <div style="margin-bottom:6px"><strong style="color:var(--text)">Только визуальное оформление</strong> без правок логики → <em>«Дизайн»</em>.</div>
+          <div><strong style="color:var(--text)">Учётки, лицензии, доступы, рассылки, документация, обучение</strong> → <em>«Администрирование»</em>.</div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- 3. PIPELINE -->
+
+  <section id="pipeline" class="section-gap">
+    <div class="section-header">
+      <div class="section-icon" style="background:#E8F0FA">⚡</div>
+      <div>
+        <div class="section-title">Pipeline по типам задач</div>
+        <div class="section-desc">Полная последовательность статусов в Jira для каждого из 4 типов заявок.</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-body">
+
+        <!-- Проект -->
+        <div class="pip-section">
+          <div class="pip-type-label"><span class="tag" style="padding:3px 10px;font-size:11px;background:#EAF3DE;color:#27500A;border-radius:4px;font-weight:600">📊 Проект</span> <span style="font-size:11px;color:var(--text-muted);margin-left:8px;font-family:var(--mono)">8 статусов · полный цикл</span></div>
+          <div class="pipeline-wrap">
+            <div class="pipeline">
+              <div class="pip-step">
+                <div class="pip-circle pip-c-gray">В очередь</div>
+                <div class="pip-lbl">Оценка реализуемости</div>
+              </div>
+              <div class="pip-connector"></div>
+              <div class="pip-step">
+                <div class="pip-circle pip-c-gold">ТЗ / ФС</div>
+                <div class="pip-lbl">Совместный митинг, согласование</div>
+              </div>
+              <div class="pip-connector"></div>
+              <div class="pip-step">
+                <div class="pip-circle pip-c-gold">В работе</div>
+                <div class="pip-lbl">Разработка</div>
+              </div>
+              <div class="pip-connector"></div>
+              <div class="pip-step">
+                <div class="pip-circle pip-c-purple">Код-ревью</div>
+                <div class="pip-lbl">Проверка Team Lead</div>
+              </div>
+              <div class="pip-connector"></div>
+              <div class="pip-step">
+                <div class="pip-circle pip-c-blue">Тест</div>
+                <div class="pip-lbl">Внутреннее тестирование</div>
+              </div>
+              <div class="pip-connector"></div>
+              <div class="pip-step">
+                <div class="pip-circle pip-c-teal">UAT</div>
+                <div class="pip-lbl">Приёмка бизнесом, обучение</div>
+              </div>
+              <div class="pip-connector"></div>
+              <div class="pip-step">
+                <div class="pip-circle pip-c-green">Выполнено</div>
+                <div class="pip-lbl">Принято заказчиком ✓</div>
+              </div>
+            </div>
+          </div>
+          <div style="margin-top:10px;font-size:12px;color:var(--text-muted);line-height:1.55;padding-left:4px">
+            <strong style="color:var(--text)">Участники:</strong> Заказчик · Спонсор проекта (при наличии) · Центральная команда разработчиков · Владелец источника данных
+          </div>
+        </div>
+
+        <hr class="divider">
+
+        <!-- Доработка -->
+        <div class="pip-section">
+          <div class="pip-type-label"><span class="tag" style="padding:3px 10px;font-size:11px;background:#E6F1FB;color:#0C447C;border-radius:4px;font-weight:600">🔧 Доработка</span> <span style="font-size:11px;color:var(--text-muted);margin-left:8px;font-family:var(--mono)">8 статусов · идентично «Проекту»</span></div>
+          <div class="pipeline-wrap">
+            <div class="pipeline">
+              <div class="pip-step">
+                <div class="pip-circle pip-c-gray">В очередь</div>
+                <div class="pip-lbl">Оценка реализуемости</div>
+              </div>
+              <div class="pip-connector"></div>
+              <div class="pip-step">
+                <div class="pip-circle pip-c-gold">ТЗ / ФС</div>
+                <div class="pip-lbl">Согласование (упрощённо)</div>
+              </div>
+              <div class="pip-connector"></div>
+              <div class="pip-step">
+                <div class="pip-circle pip-c-gold">В работе</div>
+                <div class="pip-lbl">Разработка</div>
+              </div>
+              <div class="pip-connector"></div>
+              <div class="pip-step">
+                <div class="pip-circle pip-c-purple">Код-ревью</div>
+                <div class="pip-lbl">Проверка Team Lead</div>
+              </div>
+              <div class="pip-connector"></div>
+              <div class="pip-step">
+                <div class="pip-circle pip-c-blue">Тест</div>
+                <div class="pip-lbl">Внутреннее тестирование</div>
+              </div>
+              <div class="pip-connector"></div>
+              <div class="pip-step">
+                <div class="pip-circle pip-c-teal">UAT</div>
+                <div class="pip-lbl">Приёмка бизнесом</div>
+              </div>
+              <div class="pip-connector"></div>
+              <div class="pip-step">
+                <div class="pip-circle pip-c-green">Выполнено</div>
+                <div class="pip-lbl">Принято заказчиком ✓</div>
+              </div>
+            </div>
+          </div>
+          <div style="margin-top:10px;font-size:12px;color:var(--text-muted);line-height:1.55;padding-left:4px">
+            <strong style="color:var(--text)">Отличия от Проекта:</strong> спонсор обычно не назначается; новая ФС от Владельца источника не требуется при работе в существующей модели; согласование ТЗ возможно в Jira без митинга
+          </div>
+        </div>
+
+        <hr class="divider">
+
+        <!-- Дизайн -->
+        <div class="pip-section">
+          <div class="pip-type-label"><span class="tag" style="padding:3px 10px;font-size:11px;background:#EEEDFE;color:#3C3489;border-radius:4px;font-weight:600">🎨 Дизайн</span> <span style="font-size:11px;color:var(--text-muted);margin-left:8px;font-family:var(--mono)">6 статусов · без ТЗ/ФС и Код-ревью</span></div>
+          <div class="pipeline-wrap">
+            <div class="pipeline">
+              <div class="pip-step">
+                <div class="pip-circle pip-c-gray">В очередь</div>
+                <div class="pip-lbl">Оценка реализуемости</div>
+              </div>
+              <div class="pip-connector"></div>
+              <div class="pip-step">
+                <div class="pip-circle pip-c-gold">В работе</div>
+                <div class="pip-lbl">Разработка макета</div>
+              </div>
+              <div class="pip-connector"></div>
+              <div class="pip-step">
+                <div class="pip-circle pip-c-blue">Тест</div>
+                <div class="pip-lbl">Соответствие UI-стандартам</div>
+              </div>
+              <div class="pip-connector"></div>
+              <div class="pip-step">
+                <div class="pip-circle pip-c-teal">UAT</div>
+                <div class="pip-lbl">Приёмка дизайна</div>
+              </div>
+              <div class="pip-connector"></div>
+              <div class="pip-step">
+                <div class="pip-circle pip-c-green">Выполнено</div>
+                <div class="pip-lbl">Принято заказчиком ✓</div>
+              </div>
+            </div>
+          </div>
+          <div style="margin-top:10px;font-size:12px;color:var(--text-muted);line-height:1.55;padding-left:4px">
+            <strong style="color:var(--text)">Участники:</strong> Заказчик и Центральная команда. Владелец источника данных в процессе не участвует.
+          </div>
+        </div>
+
+        <hr class="divider">
+
+        <!-- Администрирование -->
+        <div class="pip-section" style="margin-bottom:0">
+          <div class="pip-type-label"><span class="tag" style="padding:3px 10px;font-size:11px;background:#FEF3E0;color:#8B5500;border-radius:4px;font-weight:600">⚙️ Администрирование</span> <span style="font-size:11px;color:var(--text-muted);margin-left:8px;font-family:var(--mono)">5 статусов · без ТЗ/ФС, Тест и UAT</span></div>
+          <div class="pipeline-wrap">
+            <div class="pipeline">
+              <div class="pip-step">
+                <div class="pip-circle pip-c-gray">В очередь</div>
+                <div class="pip-lbl">Оценка</div>
+              </div>
+              <div class="pip-connector"></div>
+              <div class="pip-step">
+                <div class="pip-circle pip-c-gold">В работе</div>
+                <div class="pip-lbl">Выполнение задачи</div>
+              </div>
+              <div class="pip-connector"></div>
+              <div class="pip-step">
+                <div class="pip-circle pip-c-purple">Код-ревью</div>
+                <div class="pip-lbl">Проверка TL / 2-го специалиста</div>
+              </div>
+              <div class="pip-connector"></div>
+              <div class="pip-step">
+                <div class="pip-circle pip-c-green">Выполнено</div>
+                <div class="pip-lbl">Принято заказчиком ✓</div>
+              </div>
+            </div>
+          </div>
+          <div style="margin-top:10px;font-size:12px;color:var(--text-muted);line-height:1.55;padding-left:4px">
+            <strong style="color:var(--text)">Участники:</strong> Заказчик и Центральная команда. Владелец источника данных привлекается в исключительных случаях (например, настройка сервисных доступов к источнику).
+          </div>
+        </div>
+
+        <!-- Cancellation note -->
+        <div style="margin-top:24px;padding:14px 18px;background:#F9F8F7;border:1px solid var(--border);border-radius:var(--radius-sm);display:flex;gap:12px;align-items:flex-start">
+          <div style="font-size:16px;flex-shrink:0;line-height:1.2;color:var(--red)">⊘</div>
+          <div style="font-size:12.5px;line-height:1.6;color:var(--text-muted)">
+            На любом этапе workflow заявка может быть переведена в статус <strong style="color:var(--text)">«Невозможно удовлетворить / Отмена»</strong> с комментарием о причине. Заказчик корректирует и возвращает в «В очередь» либо закрывает окончательно.
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- 4. SLA -->
+  <section id="sla" class="section-gap">
+    <div class="section-header">
+      <div class="section-icon" style="background:#E0F5EE">⏱</div>
+      <div>
+        <div class="section-title">Ориентировочные сроки по этапам</div>
+        <div class="section-desc">Диапазоны min/max, основанные на типовой практике. Окончательный срок фиксируется в задаче Jira после оценки.</div>
+      </div>
+    </div>
+
+    <!-- Disclaimer card -->
+    <div class="card" style="background:#FEF7E8;border:1px solid #F2D89A;padding:18px 22px;margin-bottom:16px;display:flex;gap:14px;align-items:flex-start">
+      <div style="font-size:20px;flex-shrink:0;line-height:1">⚠️</div>
+      <div style="font-size:13px;line-height:1.65;color:#5C4413">
+        <strong style="color:#3D2D08;font-size:14px;display:block;margin-bottom:6px">Сроки являются ориентировочными, а не обязательством</strong>
+        Указанные диапазоны отражают типовую длительность этапов для задач средней сложности. Реальный срок зависит от объёма работ, сложности модели данных, доступности заказчика на этапах согласования и тестирования, а также параллельной загрузки команды. Конкретные сроки по каждой задаче определяются после анализа и фиксируются в задаче Jira; именно они являются согласованным сроком исполнения. Сроки на сайте справочные и не могут служить основанием для претензий.
+      </div>
+    </div>
+
+    <div class="card">
+      <table class="sla-table">
+        <thead>
+          <tr>
+            <th style="width:26%">Этап</th>
+            <th>Проект</th>
+            <th>Доработка</th>
+            <th>Дизайн</th>
+            <th>Администрирование</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="sla-stage">В очередь (приём, оценка)</td>
+            <td><span class="sla-normal">2–5 дней</span></td>
+            <td><span class="sla-normal">1–3 дня</span></td>
+            <td><span class="sla-normal">1–3 дня</span></td>
+            <td><span class="sla-normal">1–2 дня</span></td>
+          </tr>
+          <tr>
+            <td class="sla-stage">ТЗ / ФС</td>
+            <td><span class="sla-normal">5–14 дней <sup style="color:var(--text-muted)">¹</sup></span></td>
+            <td><span class="sla-normal">2–7 дней <sup style="color:var(--text-muted)">¹</sup></span></td>
+            <td><span class="sla-na">— (не требуется)</span></td>
+            <td><span class="sla-na">— (не требуется)</span></td>
+          </tr>
+          <tr>
+            <td class="sla-stage">В работе (разработка)</td>
+            <td><span class="sla-normal">от 3 недель и более <sup style="color:var(--text-muted)">²</sup></span></td>
+            <td><span class="sla-normal">3–15 рабочих дней <sup style="color:var(--text-muted)">²</sup></span></td>
+            <td><span class="sla-normal">2–7 дней</span></td>
+            <td><span class="sla-normal">от нескольких часов до 5 дней <sup style="color:var(--text-muted)">³</sup></span></td>
+          </tr>
+          <tr>
+            <td class="sla-stage">Код-ревью</td>
+            <td><span class="sla-normal">1–3 дня</span></td>
+            <td><span class="sla-normal">1–2 дня</span></td>
+            <td><span class="sla-na">— (контроль на этапе Тест)</span></td>
+            <td><span class="sla-normal">1 день</span></td>
+          </tr>
+          <tr>
+            <td class="sla-stage">Тест</td>
+            <td><span class="sla-normal">2–5 дней</span></td>
+            <td><span class="sla-normal">1–3 дня</span></td>
+            <td><span class="sla-normal">1–3 дня</span></td>
+            <td><span class="sla-na">— (не требуется)</span></td>
+          </tr>
+          <tr>
+            <td class="sla-stage">UAT (приёмка бизнесом)</td>
+            <td><span class="sla-normal">5–10 дней <sup style="color:var(--text-muted)">⁴</sup></span></td>
+            <td><span class="sla-normal">2–5 дней <sup style="color:var(--text-muted)">⁴</sup></span></td>
+            <td><span class="sla-normal">2–5 дней <sup style="color:var(--text-muted)">⁴</sup></span></td>
+            <td><span class="sla-na">— (не требуется)</span></td>
+          </tr>
+          <tr>
+            <td class="sla-stage">Выполнено (закрытие)</td>
+            <td><span class="sla-normal">в течение 1–2 дней</span></td>
+            <td><span class="sla-normal">в течение 1–2 дней</span></td>
+            <td><span class="sla-normal">в течение 1–2 дней</span></td>
+            <td><span class="sla-normal">в течение 1 дня</span></td>
+          </tr>
+        </tbody>
+      </table>
+      <div style="padding:14px 16px;font-size:12px;color:var(--text-muted);line-height:1.65;border-top:1px solid var(--border);background:var(--gray-50)">
+        <div style="margin-bottom:4px"><strong style="color:var(--text)">¹ ТЗ/ФС</strong> — длительность зависит от привлечения Владельца источника данных и от количества согласующих сторон. Для Доработки часто проводится в упрощённом формате (согласование в Jira без отдельного митинга).</div>
+        <div style="margin-bottom:4px"><strong style="color:var(--text)">² Разработка</strong> — диапазоны для типовых задач. Сложные интеграции, многоисточниковые модели и проекты с участием Владельца источника данных могут потребовать существенно больше времени; конкретный срок согласовывается отдельно при оценке и фиксируется в задаче Jira.</div>
+        <div style="margin-bottom:4px"><strong style="color:var(--text)">³ Администрирование</strong> — сильно зависит от характера задачи: настройка одной учётной записи и подготовка эксплуатационной документации требуют разного времени.</div>
+        <div><strong style="color:var(--text)">⁴ Тест и UAT</strong> — срок включает время на ответы заказчика. Если команда заказчика недоступна или ответы поступают с задержкой, общий срок этапа пропорционально увеличивается.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6. ROLES -->
+  <section id="roles" class="section-gap">
+    <div class="section-header">
+      <div class="section-icon" style="background:#F0EBFB">👥</div>
+      <div>
+        <div class="section-title">Роли и зоны ответственности</div>
+        <div class="section-desc">Кто за что отвечает в текущей структуре отдела и при взаимодействии с бизнесом.</div>
+      </div>
+    </div>
+    <div class="roles-grid">
+
+      <!-- ROLE 1: PM -->
+      <div class="role-card">
+        <div class="role-header">
+          <div class="role-avatar" style="background:#FEF3E0;color:#8B5500">🎯</div>
+          <div>
+            <div class="role-name">Руководитель проекта (PM)</div>
+            <div class="role-sub">Единая точка коммуникации между бизнесом и командой разработки</div>
+          </div>
+        </div>
+        <ul class="role-items">
+          <li>Принимает и валидирует входящие запросы от бизнеса</li>
+          <li>Назначает приоритет задачам внутри команды</li>
+          <li>Распределяет работу между разработчиками с учётом их загрузки</li>
+          <li>Контролирует ход выполнения и соблюдение этапов workflow</li>
+          <li>Является единой точкой коммуникации с бизнес-заказчиком</li>
+        </ul>
+      </div>
+
+      <!-- ROLE 2: Central dev team -->
+      <div class="role-card">
+        <div class="role-header">
+          <div class="role-avatar" style="background:#EAF3DE;color:var(--green)">💻</div>
+          <div>
+            <div class="role-name">Центральная команда разработчиков</div>
+            <div class="role-sub">Разработка, code review, поддержка среды</div>
+          </div>
+        </div>
+        <ul class="role-items">
+          <li>Выполняет анализ требований, разработку и доработку приложений</li>
+          <li>Проводит самотестирование перед передачей на code review</li>
+          <li>Проводит code review задач коллег по команде</li>
+          <li>Поддерживает централизованную среду Qlik Sense на всех объектах</li>
+          <li>Ежедневно обновляет статус задач в Jira, своевременно сигнализирует о блокерах</li>
+          <li>Проводит мониторинг после публикации в Production</li>
+        </ul>
+      </div>
+
+      <!-- ROLE 3: Local specialists -->
+      <div class="role-card">
+        <div class="role-header">
+          <div class="role-avatar" style="background:#E0F5EE;color:#0B6E52">📍</div>
+          <div>
+            <div class="role-name">Локальные специалисты на объектах</div>
+            <div class="role-sub">Связующее звено между бизнесом объекта и Центральной командой</div>
+          </div>
+        </div>
+        <ul class="role-items">
+          <li>Помогает бизнесу объекта корректно сформулировать запрос в Jira</li>
+          <li>Уточняет специфику данных и процессов на стороне объекта</li>
+          <li>Координирует тестирование на стороне объекта</li>
+          <li>Не выполняет самостоятельную разработку и не вносит изменения в среду</li>
+          <li>Сопровождает выданные на объект лицензии в части пользователей</li>
+        </ul>
+      </div>
+
+      <!-- ROLE 4: Business -->
+      <div class="role-card">
+        <div class="role-header">
+          <div class="role-avatar" style="background:#E8F0FA;color:var(--blue)">🏢</div>
+          <div>
+            <div class="role-name">Бизнес-заказчик</div>
+            <div class="role-sub">Подразделения объектов холдинга AKFA</div>
+          </div>
+        </div>
+        <ul class="role-items">
+          <li>Заполняет форму приёма задачи в Jira полностью и достоверно</li>
+          <li>Предоставляет эталонные данные для сверки и валидации</li>
+          <li>Отвечает на уточняющие вопросы команды в разумный срок</li>
+          <li>Проводит тестирование и UAT в согласованные сроки</li>
+          <li>Согласовывает приёмку результата перед публикацией в Production</li>
+          <li>Не обращается напрямую к разработчикам в обход PM и Jira</li>
+        </ul>
+      </div>
+
+      <!-- ROLE 5: Data Owner -->
+      <div class="role-card">
+        <div class="role-header">
+          <div class="role-avatar" style="background:#F0EBFB;color:var(--purple)">🗄</div>
+          <div>
+            <div class="role-name">Владелец источника данных</div>
+            <div class="role-sub">Подключается, когда задача затрагивает данные из ERP/DB</div>
+          </div>
+        </div>
+        <ul class="role-items">
+          <li>Подтверждает корректность модели данных и используемых таблиц</li>
+          <li>Согласовывает доступ к источнику и характер извлекаемых данных</li>
+          <li>Отвечает на вопросы по бизнес-логике источника</li>
+          <li>Подключается к UAT при существенных изменениях модели</li>
+        </ul>
+      </div>
+
+      <!-- ROLE 6: Jira Rules -->
+      <div class="role-card">
+        <div class="role-header">
+          <div class="role-avatar" style="background:#FDEDF0;color:var(--red)">📌</div>
+          <div>
+            <div class="role-name">Правила работы в Jira</div>
+            <div class="role-sub">Обязательны для всех участников</div>
+          </div>
+        </div>
+        <div class="jira-rules">
+          <div class="jira-rule">
+            <div class="jira-icon">📝</div>
+            <div class="jira-text"><strong>Каждая задача — через Jira</strong>Запросы вне Jira (мессенджеры, e-mail, устно) в работу не берутся</div>
+          </div>
+          <div class="jira-rule">
+            <div class="jira-icon">🔄</div>
+            <div class="jira-text"><strong>Статус — день в день</strong>Смена статуса фиксируется до конца рабочего дня</div>
+          </div>
+          <div class="jira-rule">
+            <div class="jira-icon">⏸</div>
+            <div class="jira-text"><strong>On Hold с указанием причины</strong>При переводе задачи в ожидание описывается, чего и от кого ждём</div>
+          </div>
+          <div class="jira-rule">
+            <div class="jira-icon">🔗</div>
+            <div class="jira-text"><strong>Ссылка на эталон</strong>В описании задачи обязательна ссылка на источник данных или эталон расчёта</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <strong>Qlik Sense Department Workflow</strong> — AKFA Group &nbsp;·&nbsp; Версия 3.1 &nbsp;·&nbsp; 2026<br>
+  <span style="margin-top:6px;display:block">Сайт является краткой публичной версией регламента отдела для бизнес-заказчиков.</span>
+  <span style="margin-top:4px;display:block;color:rgba(255,255,255,0.5)">Полный регламент с подписями утверждающих лиц будет размещён по ссылке после официального утверждения.</span>
+</footer>
+
+</body>
+</html>
